@@ -98,7 +98,6 @@ class MandrillTransport implements Swift_Transport
                 return 0;
             }
         }
-
         $sendCount = 0;
 
         $mandrillMessage = $this->getMandrillMessage($message);
@@ -109,7 +108,7 @@ class MandrillTransport implements Swift_Transport
             $this->resultApi = $mandrill->messages->send($mandrillMessage);
 
             foreach ($this->resultApi as $item) {
-                if ($item['status'] == 'sent') {
+                if (in_array($item['status'], array('sent', 'queued', 'scheduled'))) {
                     $sendCount++;
                 } else {
                     $failedRecipients[] = $item['email'];
